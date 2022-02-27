@@ -1,6 +1,6 @@
 # AwesomeKeys
 
-AwesomeKeys is a plugin for Hammerspoon, it allows you to easily set custom key bindings (either global or app-specific).
+AwesomeKeys is a plugin for [Hammerspoon](https://www.hammerspoon.org/), it allows you to easily set custom key bindings (either global or app-specific).
 
 ![AwesomeKeys](./assets/image.png)
 
@@ -77,7 +77,11 @@ keys:remapAppKeys(
 )
 ```
 
-Activate a hyper mode. See more options [here](#spoonawesomekeyscreatehyperbindingsconfig)
+Activate a hyper mode. See more options [here](#spoonawesomekeyscreatehyperbindingsconfig).
+
+You can use [Karabiner](https://karabiner-elements.pqrs.org/) to map the caps lock key to `F20` (or any other key that you rarely use).
+
+![Karabiner](./assets/karabiner.png)
 
 ```lua
 local hyper =
