@@ -77,7 +77,7 @@ keys:remapAppKeys(
 )
 ```
 
-Activate a hyper mode.
+Activate a hyper mode. See more options [here](#spoonawesomekeyscreatehyperbindingsconfig)
 
 ```lua
 local hyper =
