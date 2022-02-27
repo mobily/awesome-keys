@@ -79,7 +79,7 @@ keys:remapAppKeys(
 
 Activate a hyper mode. See more options [here](#spoonawesomekeyscreatehyperbindingsconfig).
 
-You can use [Karabiner](https://karabiner-elements.pqrs.org/) to map the caps lock key to `F20` (or any other key that you rarely use).
+You can use [Karabiner](https://karabiner-elements.pqrs.org/) to map the caps lock key (or any other key that you rarely use) to `F20` (or anything else).
 
 ![Karabiner](./assets/karabiner.png)
 
