@@ -2,11 +2,11 @@
 
 AwesomeKeys is a plugin for Hammerspoon, it allows you to easily set custom key bindings (either global or app-specific).
 
-![AwesomeKeys](./assets/keys.gif)
+![AwesomeKeys](./assets/image.png)
 
 ### Installation
 
-Download `AwesomeKeys.zip`, unzip and open `AwesomeKeys.spoon` (it will auto-install the spoon).
+Download [`AwesomeKeys.zip`](https://github.com/mobily/awesome-keys/releases/download/v1.0.0/AwesomeKeys-v1.0.0.spoon.zip), unzip and open `AwesomeKeys.spoon` (it will auto-install the spoon).
 
 Add the following to your the Hammerspoon config file (`init.lua`):
 
