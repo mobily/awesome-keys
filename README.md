@@ -1,6 +1,6 @@
 # AwesomeKeys
 
-AwesomeKeys is a plugin for [Hammerspoon](https://www.hammerspoon.org/), that allows customizing either global or app-specific key bindings.
+AwesomeKeys is a plugin for [Hammerspoon](https://www.hammerspoon.org/), that allows customizing global and app-specific key bindings.
 
 ![AwesomeKeys](./assets/image.png)
 
