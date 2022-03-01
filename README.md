@@ -6,7 +6,7 @@ AwesomeKeys is a plugin for [Hammerspoon](https://www.hammerspoon.org/), that al
 
 ### Installation
 
-Download [`AwesomeKeys.zip`](https://github.com/mobily/awesome-keys/releases/download/v1.0.0/AwesomeKeys-v1.0.0.spoon.zip), unzip and open `AwesomeKeys.spoon` (it will auto-install the spoon).
+Download [`AwesomeKeys.zip`](https://github.com/mobily/awesome-keys/releases/download/v1.1.0/AwesomeKeys-v1.1.0.spoon.zip), unzip and open `AwesomeKeys.spoon` (it will auto-install the spoon).
 
 Add the following to your the Hammerspoon config file (`init.lua`):
 
