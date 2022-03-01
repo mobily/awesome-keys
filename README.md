@@ -300,7 +300,11 @@ hyper:setAppBindings(
   position = {x = "center", y = "bottom", offsetY = 8, offsetX = 8} -- x: left/center/right, y: top/center/bottom,
   spacer = " · ", -- a string visible between labels
   separator = "———", -- a string visible between global and app-specific key bindings
-  splitEvery = 6
+  splitEvery = 6,
+  onEnter = function() -- a function that is called when the hyper mode is activated
+  end,
+  onExit = function() -- a function that is called when the hyper mode is deactivated
+  end
 }
 ```
 
@@ -329,6 +333,7 @@ hyper:setAppBindings(
   app = "", -- an app name
   keys = {
     {
+      splitEvery = 6, -- optional, overrides a value passed to `createHyperBindings`
       mods = {}, -- optional
       key = "",
       label = "",  -- a key shortcut label
