@@ -162,6 +162,9 @@ local function eachWithIndex(table, fn)
   end
 end
 
+local function ignore()
+end
+
 local function findAppName(name)
   local app = hs.application.find(name)
 
@@ -276,6 +279,7 @@ function obj:remapAppKeys(...)
 end
 
 local HyperBindings = {}
+HyperBindings.__index = HyperBindings
 
 function HyperBindings:showAlert()
   local text = hs.styledtext.new("", {})
@@ -349,11 +353,8 @@ function HyperBindings:showAlert()
     end
   end
 
-  if self.alertUUID then
-    self:closeAlert()
-  end
-
-  self.alertUUID = view.show(text, self.alertConfig, hs.screen.mainScreen())
+  self:closeAlert()
+  view.show(text, self.alertConfig, hs.screen.mainScreen())
 end
 
 function HyperBindings:makePrettyKeyLabel(element)
@@ -426,7 +427,7 @@ function HyperBindings:makePrettyKeyLabel(element)
 end
 
 function HyperBindings:closeAlert()
-  view.closeSpecific(self.alertUUID)
+  view.closeAll()
 end
 
 local defaultAlertConfig = {
@@ -442,17 +443,20 @@ local defaultAlertConfig = {
   padding = 24,
   position = {x = "center", y = "bottom", offsetY = 8, offsetX = 8}
 }
+local hyperBindings = {}
 
 function HyperBindings:new(options)
+  local class = {}
+  local options = options or {}
   local mods = options.mods or {}
   local hyperKey = options.hyperKey
 
-  local module = self
+  setmetatable(class, HyperBindings)
 
-  self.hyper = hs.hotkey.modal.new(mods, hyperKey)
-  self.spacer = options.spacer or " · "
-  self.separator = options.separator or "———"
-  self.alertConfig =
+  class.hyper = hs.hotkey.modal.new(mods, hyperKey)
+  class.spacer = options.spacer or " · "
+  class.separator = options.separator or "———"
+  class.alertConfig =
     merge(
     defaultAlertConfig,
     {
@@ -469,33 +473,48 @@ function HyperBindings:new(options)
       position = merge(defaultAlertConfig.position, options.position)
     }
   )
-  self.splitEvery = options.splitEvery or 6
+  class.splitEvery = options.splitEvery or 6
+  class.onExit = options.onExit or ignore
+  class.onEnter = options.onEnter or ignore
 
-  self.alertUUID = nil
-  self.isEnabled = false
-  self.appBindingsData = {}
+  class.appBindingsData = {}
+  class.globals = {}
+  class.isEnabled = false
 
-  self.globals = {}
+  table.insert(hyperBindings, {key = hyperKey, hyper = class.hyper})
 
-  function self.hyper:entered()
-    module.isEnabled = true
-    module:showAlert()
+  function class.hyper:entered()
+    class.isEnabled = true
+
+    class.onEnter()
+
+    hs.fnutils.ieach(
+      hyperBindings,
+      function(o)
+        if hyperKey ~= o.key then
+          o.hyper:exit()
+        end
+      end
+    )
+
+    class:showAlert()
   end
 
-  function self.hyper:exited()
-    module.isEnabled = false
-    module:closeAlert()
+  function class.hyper:exited()
+    class.isEnabled = false
+    class.onExit()
+    class:closeAlert()
   end
 
-  self.hyper:bind(
+  class.hyper:bind(
     mods,
     hyperKey,
     function()
-      self.hyper:exit()
+      class.hyper:exit()
     end
   )
 
-  return self
+  return class
 end
 
 function HyperBindings:setGlobalBindings(...)
@@ -519,8 +538,6 @@ function HyperBindings:setAppBindings(...)
     {hs.window.filter.windowFocused, hs.window.filter.windowTitleChanged},
     function(window)
       currentApp = window:application()
-
-      print(currentApp:focusedWindow())
 
       if self.isEnabled then
         self:showAlert()
