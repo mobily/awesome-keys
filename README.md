@@ -293,11 +293,13 @@ hyper:setAppBindings(
   textColor = {hex = "#fff", alpha = 0.8}, -- hs.drawing.color
   modsColor = {hex = "#FA58B6"}, -- hs.drawing.color
   keyColor = {hex = "#f5d76b"}, -- hs.drawing.color
+  globalLabelColor = {hex = "#FA58B6"}, -- hs.drawing.color
   fontFamily = ".AppleSystemUIFont",
   fontSize = 15,
   radius = 0,
   padding = 24,
   position = {x = "center", y = "bottom", offsetY = 8, offsetX = 8} -- x: left/center/right, y: top/center/bottom,
+  globalLabel = "",  -- a string visible previous to global labels
   spacer = " · ", -- a string visible between labels
   separator = "———", -- a string visible between global and app-specific key bindings
   splitEvery = 6,

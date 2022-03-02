@@ -339,6 +339,20 @@ function HyperBindings:showAlert()
   end
 
   if hasGlobals then
+    if self.globalLabel ~= "" then
+      text =
+        text ..
+        styledtext(
+          self.globalLabel,
+          merge(
+            textStyle,
+            {
+              color = self.alertConfig.globalLabelColor
+            }
+          )
+        )
+    end
+
     addElements(self.globals)
   end
 
@@ -437,6 +451,7 @@ local defaultAlertConfig = {
   textColor = {hex = "#fff", alpha = 0.8},
   modsColor = {hex = "#FA58B6"},
   keyColor = {hex = "#f5d76b"},
+  globalLabelColor = {hex = "#FA58B6"},
   fontFamily = ".AppleSystemUIFont",
   fontSize = 15,
   radius = 0,
@@ -455,6 +470,7 @@ function HyperBindings:new(options)
 
   class.hyper = hs.hotkey.modal.new(mods, hyperKey)
   class.spacer = options.spacer or " · "
+  class.globalLabel = options.globalLabel or ""
   class.separator = options.separator or "———"
   class.alertConfig =
     merge(
@@ -466,6 +482,7 @@ function HyperBindings:new(options)
       textColor = options.textColor,
       modsColor = options.modsColor,
       keyColor = options.keyColor,
+      globalLabelColor = options.globalLabelColor,
       fontFamily = options.fontFamily,
       fontSize = options.fontSize,
       radius = options.radius,
@@ -481,22 +498,20 @@ function HyperBindings:new(options)
   class.globals = {}
   class.isEnabled = false
 
-  table.insert(hyperBindings, {key = hyperKey, hyper = class.hyper})
-
   function class.hyper:entered()
     class.isEnabled = true
-
-    class.onEnter()
 
     hs.fnutils.ieach(
       hyperBindings,
       function(o)
         if hyperKey ~= o.key then
           o.hyper:exit()
+          o.hyper.k:disable()
         end
       end
     )
 
+    class.onEnter()
     class:showAlert()
   end
 
@@ -511,8 +526,19 @@ function HyperBindings:new(options)
     hyperKey,
     function()
       class.hyper:exit()
+
+      hs.fnutils.ieach(
+        hyperBindings,
+        function(o)
+          if hyperKey ~= o.key then
+            o.hyper.k:enable()
+          end
+        end
+      )
     end
   )
+
+  table.insert(hyperBindings, {key = hyperKey, hyper = class.hyper})
 
   return class
 end
@@ -565,13 +591,16 @@ function HyperBindings:setAppBindings(...)
             pattern = el.pattern,
             fn = el.fn
           }
+          local isCallable = el.fn ~= nil
 
-          if current then
+          if current and isCallable then
             table.insert(current.xs, config)
             return nil
           end
 
-          table.insert(bindings, {key = el.key, mods = el.mods, xs = {config}})
+          if isCallable then
+            table.insert(bindings, {key = el.key, mods = el.mods, xs = {config}})
+          end
         end
       )
     end
