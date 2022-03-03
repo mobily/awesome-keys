@@ -407,6 +407,27 @@ function HyperBindings:makePrettyKeyLabel(element)
       return switch:case(m)
     end
   )
+  local key =
+    switch {
+    ["return"] = function()
+      return "↩"
+    end,
+    ["up"] = function()
+      return "↑"
+    end,
+    ["right"] = function()
+      return "→"
+    end,
+    ["down"] = function()
+      return "↓"
+    end,
+    ["left"] = function()
+      return "←"
+    end,
+    default = function()
+      return element.key
+    end
+  }
   local textStyle = {
     font = {name = self.alertConfig.fontFamily, size = self.alertConfig.fontSize}
   }
@@ -421,7 +442,7 @@ function HyperBindings:makePrettyKeyLabel(element)
     )
   ) ..
     styledtext(
-      element.key .. " ",
+      key:case(element.key),
       merge(
         textStyle,
         {
@@ -430,7 +451,7 @@ function HyperBindings:makePrettyKeyLabel(element)
       )
     ) ..
       styledtext(
-        element.label,
+        element.label ~= nil and element.label ~= "" and " " .. element.label or "",
         merge(
           textStyle,
           {
