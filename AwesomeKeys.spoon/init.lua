@@ -484,12 +484,12 @@ local hyperBindings = {}
 function HyperBindings:new(options)
   local class = {}
   local options = options or {}
-  local mods = options.mods or {}
+  local hyperMods = options.hyperMods or {}
   local hyperKey = options.hyperKey
 
   setmetatable(class, HyperBindings)
 
-  class.hyper = hs.hotkey.modal.new(mods, hyperKey)
+  class.hyper = hs.hotkey.modal.new(hyperMods, hyperKey)
   class.spacer = options.spacer or " · "
   class.globalLabel = options.globalLabel or ""
   class.separator = options.separator or "———"
@@ -542,22 +542,24 @@ function HyperBindings:new(options)
     class:closeAlert()
   end
 
-  class.hyper:bind(
-    mods,
-    hyperKey,
-    function()
-      class.hyper:exit()
+  local function exitFn()
+    class.hyper:exit()
 
-      hs.fnutils.ieach(
-        hyperBindings,
-        function(o)
-          if hyperKey ~= o.key then
-            o.hyper.k:enable()
-          end
+    hs.fnutils.ieach(
+      hyperBindings,
+      function(o)
+        if hyperKey ~= o.key then
+          o.hyper.k:enable()
         end
-      )
-    end
-  )
+      end
+    )
+  end
+
+  class.hyper:bind(hyperMods, hyperKey, exitFn)
+
+  if options.hyperExitKey then
+    class.hyper:bind({}, options.hyperExitKey, exitFn)
+  end
 
   table.insert(hyperBindings, {key = hyperKey, hyper = class.hyper})
 

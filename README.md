@@ -287,6 +287,8 @@ hyper:setAppBindings(
 ```lua
 {
   hyperKey = "f20" -- a key that activates the hyper mode
+  hyperMods = {}, -- optional, a table containing the keyboard modifiers: "command", "cmd", "control", "ctrl", "option", "shift" (optjonal)
+  hyperExitKey = "", -- optional, an additional key that deactivates the hyper mode (for instance `escape`)
   strokeWidth = 2,
   strokeColor = {white = 1, alpha = 0.1}, -- hs.drawing.color
   backgroundColor = {hex = "#000", alpha = 0.9}, -- hs.drawing.color
@@ -319,7 +321,7 @@ hyper:setAppBindings(
 {
   mods = {}, -- optional
   key = "",
-  label = "", -- a key shortcut label
+  label = "", -- optional, a key shortcut label
   fn = function()
   end
 }
@@ -338,7 +340,7 @@ hyper:setAppBindings(
       splitEvery = 6, -- optional, overrides a value passed to `createHyperBindings`
       mods = {}, -- optional
       key = "",
-      label = "",  -- a key shortcut label
+      label = "",  -- optional, a key shortcut label
       fn = function()
       end,
       pattern = "" -- (de)activate a shortcut on window title change (internally it uses string.match)
