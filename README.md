@@ -34,7 +34,7 @@ keys:setGlobalBindings(
     key = "f7",
     fn = function()
       local result =
-        hs.dialog.blockAlert("Hammerspoon", "You're aboout to reload hammerspoon config, are you sure?", "OK", "Cancel")
+        hs.dialog.blockAlert("Hammerspoon", "You're about to reload hammerspoon config, are you sure?", "OK", "Cancel")
 
       if result == "OK" then
         hs.reload()
