@@ -217,7 +217,7 @@ function obj:setGlobalBindings(...)
     function(binding)
       local key, fn = binding.key, binding.fn
       local mods = binding.mods or {}
-      hs.hotkey.bind(mods, key, fn)
+      hs.hotkey.bind(mods, key, binding.pressFn or binding.fn, binding.releaseFn)
     end
   )
 end
@@ -612,9 +612,11 @@ function HyperBindings:setAppBindings(...)
           local config = {
             app = element.app,
             pattern = el.pattern,
-            fn = el.fn
+            fn = el.fn,
+            pressFn = el.pressFn,
+            releaseFn = el.releaseFn
           }
-          local isCallable = el.fn ~= nil
+          local isCallable = el.fn or el.pressFn or el.releaseFn
 
           if current and isCallable then
             table.insert(current.xs, config)
@@ -645,7 +647,7 @@ function HyperBindings:setAppBindings(...)
               return b.app == currentApp:name()
             end
           )
-          local pressOriginal = false
+          local pressOriginal = true
 
           hs.fnutils.ieach(
             apps,
@@ -653,11 +655,13 @@ function HyperBindings:setAppBindings(...)
               local pattern = app.pattern or ".*"
               local match = string.match(currentApp:focusedWindow():title(), pattern)
               if match ~= nil then
-                pressOriginal = false
-                return app.fn()
-              end
+                local fn = app.pressFn or app.fn
 
-              pressOriginal = true
+                if fn then
+                  pressOriginal = false
+                  return fn()
+                end
+              end
             end
           )
 
@@ -666,6 +670,26 @@ function HyperBindings:setAppBindings(...)
             hs.eventtap.keyStroke(mods, key, 1000)
             self.hyper:enter()
           end
+        end,
+        function()
+          local apps =
+            hs.fnutils.ifilter(
+            binding.xs,
+            function(b)
+              return b.app == currentApp:name()
+            end
+          )
+
+          hs.fnutils.ieach(
+            apps,
+            function(app)
+              local pattern = app.pattern or ".*"
+              local match = string.match(currentApp:focusedWindow():title(), pattern)
+              if match ~= nil and app.releaseFn then
+                return app.releaseFn()
+              end
+            end
+          )
         end
       )
     end
