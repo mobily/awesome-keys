@@ -570,9 +570,8 @@ function HyperBindings:setGlobalBindings(...)
   hs.fnutils.ieach(
     {...},
     function(element)
-      local mods = element.mods or {}
       table.insert(self.globals, self:makePrettyKeyLabel(element))
-      self.hyper:bind(mods, element.key, element.fn)
+      self.hyper:bind(element.mods or {}, element.key, element.pressFn or element.fn, element.releaseFn)
     end
   )
 end

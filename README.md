@@ -351,6 +351,10 @@ hyper:setAppBindings(
       label = "",  -- optional, a key shortcut label
       fn = function()
       end,
+      pressFn = function() -- optional if `fn` is set, a function that will be called when the hotkey has been pressed
+      end,
+      releaseFn = function() -- optional, a function that will be called when the hotkey has been released
+      end
       pattern = "" -- (de)activate a shortcut on window title change (internally it uses string.match)
     }
   }
