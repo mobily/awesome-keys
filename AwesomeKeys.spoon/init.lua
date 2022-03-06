@@ -635,6 +635,7 @@ function HyperBindings:setAppBindings(...)
     bindings,
     function(binding)
       local mods, key = binding.mods or {}, binding.key
+      local pressed = nil
 
       self.hyper:bind(
         mods,
@@ -647,49 +648,47 @@ function HyperBindings:setAppBindings(...)
               return b.app == currentApp:name()
             end
           )
-          local pressOriginal = true
-
-          hs.fnutils.ieach(
+          local appsWithPattern =
+            hs.fnutils.ifilter(
             apps,
             function(app)
-              local pattern = app.pattern or ".*"
-              local match = string.match(currentApp:focusedWindow():title(), pattern)
-              if match ~= nil then
-                local fn = app.pressFn or app.fn
-
-                if fn then
-                  pressOriginal = false
-                  return fn()
-                end
-              end
+              return app.pattern
             end
           )
+          local app =
+            hs.fnutils.find(
+            appsWithPattern,
+            function(app)
+              local match = string.match(currentApp:focusedWindow():title(), app.pattern)
+              return match ~= nil and (app.pressFn or app.fn)
+            end
+          )
+          app =
+            app or
+            hs.fnutils.find(
+              apps,
+              function(app)
+                return app.pressFn or app.fn
+              end
+            )
 
-          if size(apps) == 0 or pressOriginal then
+          if app then
+            local fn = app.pressFn or app.fn
+            pressed = app
+            return fn()
+          end
+
+          if size(apps) == 0 then
             self.hyper:exit()
             hs.eventtap.keyStroke(mods, key, 1000)
             self.hyper:enter()
           end
         end,
         function()
-          local apps =
-            hs.fnutils.ifilter(
-            binding.xs,
-            function(b)
-              return b.app == currentApp:name()
-            end
-          )
-
-          hs.fnutils.ieach(
-            apps,
-            function(app)
-              local pattern = app.pattern or ".*"
-              local match = string.match(currentApp:focusedWindow():title(), pattern)
-              if match ~= nil and app.releaseFn then
-                return app.releaseFn()
-              end
-            end
-          )
+          if pressed and pressed.releaseFn then
+            pressed.releaseFn()
+            pressed = nil
+          end
         end
       )
     end
