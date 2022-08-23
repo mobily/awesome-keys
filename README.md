@@ -179,7 +179,7 @@ hyper:setAppBindings(
     }
   },
   {
-    app = "iTerm",
+    app = "iTerm2",
     keys = {
       {
         mods = {"option"},
