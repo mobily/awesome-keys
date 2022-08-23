@@ -380,3 +380,8 @@ hyper:setAppBindings(
 
 - `type`: function
 - `parameters`: mods (table), key (string)
+
+#### `spoon.AwesomeKeys.fnutils.keyStrokes(keys)`
+
+- `type`: function
+- `parameters`: keys (string)

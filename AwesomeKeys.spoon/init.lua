@@ -30,6 +30,12 @@ function obj.fnutils.keyStroke(modifiers, key)
   end
 end
 
+function obj.fnutils.keyStrokes(str)
+  return function()
+    hs.eventtap.keyStrokes(str)
+  end
+end
+
 function obj.fnutils.openURL(url)
   return function()
     hs.urlevent.openURL(url)
