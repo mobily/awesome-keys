@@ -172,7 +172,7 @@ local function ignore()
 end
 
 local function findAppName(name)
-  local app = hs.application.find(name)
+  local app = hs.application.get(name)
 
   if app then
     return app:name()
@@ -301,6 +301,7 @@ function HyperBindings:showAlert()
   )
 
   local frontmostApplication = hs.application.frontmostApplication()
+
   local currentApp =
     hs.fnutils.find(
     self.appBindingsData,
@@ -374,7 +375,10 @@ function HyperBindings:showAlert()
   end
 
   self:closeAlert()
-  view.show(text, self.alertConfig, hs.screen.mainScreen())
+
+  if size(appLabels) > 0 or hasGlobals then
+    view.show(text, self.alertConfig, hs.screen.mainScreen())
+  end
 end
 
 function HyperBindings:makePrettyKeyLabel(element)
@@ -526,6 +530,14 @@ function HyperBindings:new(options)
   class.globals = {}
   class.isEnabled = false
 
+  class.spaceWatcher =
+    hs.spaces.watcher.new(
+    function()
+      class:closeAlert()
+      class:showAlert()
+    end
+  )
+
   function class.hyper:entered()
     class.isEnabled = true
 
@@ -539,6 +551,7 @@ function HyperBindings:new(options)
       end
     )
 
+    class.spaceWatcher:start()
     class.onEnter()
     class:showAlert()
   end
@@ -551,6 +564,7 @@ function HyperBindings:new(options)
 
   local function exitFn()
     class.hyper:exit()
+    class.spaceWatcher:stop()
 
     hs.fnutils.ieach(
       hyperBindings,
