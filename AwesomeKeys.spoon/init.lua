@@ -465,20 +465,6 @@ function HyperBindings:closeAlert()
   view.closeAll()
 end
 
-local defaultAlertConfig = {
-  strokeWidth = 2,
-  strokeColor = {white = 1, alpha = 0.1},
-  backgroundColor = {hex = "#000", alpha = 0.9},
-  textColor = {hex = "#fff", alpha = 0.8},
-  modsColor = {hex = "#FA58B6"},
-  keyColor = {hex = "#f5d76b"},
-  globalLabelColor = {hex = "#FA58B6"},
-  fontFamily = ".AppleSystemUIFont",
-  fontSize = 15,
-  radius = 0,
-  padding = 24,
-  position = {x = "center", y = "bottom", offsetY = 8, offsetX = 8}
-}
 local hyperBindings = {}
 
 function HyperBindings:new(options)
@@ -486,6 +472,20 @@ function HyperBindings:new(options)
   local options = options or {}
   local hyperMods = options.hyperMods or {}
   local hyperKey = options.hyperKey
+  local defaultAlertConfig = {
+    strokeWidth = 2,
+    strokeColor = {hex = "#fff", alpha = 0.1},
+    backgroundColor = {hex = "#000", alpha = 0.9},
+    textColor = {hex = "#fff", alpha = 0.8},
+    modsColor = {hex = "#FA58B6"},
+    keyColor = {hex = "#f5d76b"},
+    globalLabelColor = {hex = "#FA58B6"},
+    fontFamily = ".AppleSystemUIFont",
+    fontSize = 15,
+    radius = 0,
+    padding = 24,
+    position = {x = "center", y = "bottom", offsetY = 8, offsetX = 8}
+  }
 
   setmetatable(class, HyperBindings)
 
@@ -511,6 +511,7 @@ function HyperBindings:new(options)
       position = merge(defaultAlertConfig.position, options.position)
     }
   )
+
   class.splitEvery = options.splitEvery or 6
   class.onExit = options.onExit or ignore
   class.onEnter = options.onEnter or ignore
